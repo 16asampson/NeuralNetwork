@@ -40,7 +40,11 @@ vector<Example> readInDataList(const string& fname)
         Example temp;
         double tempY;
         myfile >> temp.x[0] >> temp.x[1] >> tempY;
-        temp.y.push_back(tempY);
+        temp.y.push_back(tempY-1);
+        //subtract 1 from x and y
+        temp.x[0] = temp.x[0] -1;
+        temp.x[1] = temp.x[1] -1;
+
         temp.y[0] = temp.y[0];
         dataList.push_back(temp);
     }

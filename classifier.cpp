@@ -42,7 +42,10 @@ class Layer
         for (int x=0; x<temp_weights.size();x++)
         {
             for(int y=0; y<temp_weights[x].size();y++)
-            temp_weights[x][y] = rand() % 100;
+            {
+                temp_weights[x][y] = rand() % 100;
+                temp_weights[x][y] = temp_weights[x][y]/100;
+            }
         }
         srand(1);
         
@@ -64,8 +67,8 @@ class Layer
         delta_prev = temp_delta_prev;
 
         //output random weights
-        cout << "Random weights" << endl;
-        print();
+        //cout << "Random weights" << endl;
+        //print();
 
     }
 
@@ -92,7 +95,7 @@ class Layer
     //function feed forward
     vector<double> feedForward( vector<double> inp)
     {
-        vector<double> input = inp;
+        input = inp;
         //this may cause error due to size difference
         //input[ni] = 1;
 
@@ -107,7 +110,7 @@ class Layer
 
             }
             //outputs are 1 and 2 so increment up 1
-            output[u] = sigmoid(temp)+1;
+            output[u] = sigmoid(temp);
         }
         return output;
 
@@ -115,7 +118,9 @@ class Layer
 
     vector<double> backProp(vector<double> delta)
     {
-        
+        int hold;
+
+        //calculate delta of previous layer
         for (int j=0; j<ni; j++)
         {
             double temp = 0;
@@ -126,22 +131,16 @@ class Layer
             delta_prev[j] = temp * input[j] * (1- input[j]);
 
         }
-        //cout << "Calculate change in W" << endl;
+        //change weights for all units in layer
         for (int j=0; j < ni; j++)
         {
             for (int u=0; u<nu; u++)
             {
-                //cout << "_____________" << endl;
-                //cout << "eta = " << eta << endl;
-                //cout << "delta[u] = " << delta[u] << endl;
-                //cout << "output[u] = " << output[u] << endl;
-                //cout << "___________" << endl;
+
                 deltaW[j][u] = eta*delta[u]*output[u];
-                //cout << "deltaW[j][u] = " << deltaW[j][u] << endl;
+
                 W[j][u] = W[j][u] + deltaW[j][u];
-                
-                //int temp;
-                //cin >> temp;
+
             }
         }
         return delta_prev;
@@ -188,23 +187,16 @@ vector<Layer> Backpropagation(double LearningRate)
             //for each layer in NN feed forward from input to output
             for(int l=0; l<NN.size(); l++)
             {
-                //cout << "Feed Forward" << endl;
                 values = NN[l].feedForward(values);
             }
 
             YCap = values;
-            //cout << "___________________" << endl;
-            //cout << "YCap values" << endl;
-            //PrintVector(YCap);
-            //cout << "ExList[e].y[0] = " << ExList[e].y[0] << endl;
-            //cout << "___________________" << endl;
-            //vector for delta (There is really only one Y per example.)
+
             vector<double> delta;
 
             //calculate delta of output layer
-            delta.push_back((ExList[e].y[0] - YCap[0])* YCap[0] * (1-YCap[0]));
-            //cout << "delta initial = ";
-            //PrintVector(delta); 
+            delta.push_back(2*(ExList[e].y[0] - YCap[0])* YCap[0] * (1-YCap[0]));
+
 
             //for each layer in NN from output to input layer
             for (int l=NN.size()-1; l>-1;l--)
@@ -229,7 +221,7 @@ double sumOfSquares(vector<Layer> NN)
     ExList = readInDataList(fExamples);
 
     //vector of Ycap
-    vector<double> YCap(ExList.size());
+    vector<double> YCap;
 
     //loop through all examples in list (validation data)
     //get YCap Values
@@ -246,12 +238,16 @@ double sumOfSquares(vector<Layer> NN)
         //store YCap of every example
         YCap.push_back(values[0]);
     }
+    //cout << "Sum of YCap = ";
+    //PrintVector(YCap);
+
 
     //calculate sum of squares error
     double Error =0;
     for (int e=0; e<ExList.size(); e++)
     {
         double temp = ExList[e].y[0] - YCap[e];
+        //cout << "differnece" << temp << endl;
         Error = Error + pow(temp,2);
     }
 
@@ -272,7 +268,7 @@ int main()
     //print inputs weights table
     cout << "TRAINING" << endl;
     cout << "Using learning rate eta = " << LRate << endl;
-    cout << "Using 5000 iterations " << endl;
+    cout << "Using 10000 iterations " << endl;
 
     cout << "OUTPUT" << endl;
     cout << "input Layer" << endl;

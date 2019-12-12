@@ -1,0 +1,15 @@
+CS-5001: HW3
+Programmer: Austin Sampson
+TRAINING
+Using learning rate eta = 0.00512
+Using 10000 iterations 
+OUTPUT
+input Layer
+0.310234    0.100234    0.35    
+0.283202    0.303202    0.24    
+0.648477    0.678477    0.15    
+0.189993    0.519993    0.35    
+output Layer
+0.149572    0.429572    0.699572    0.00957156    0.13    
+Validation
+Sum-of-Squares Error = 8.49442
